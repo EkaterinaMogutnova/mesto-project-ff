@@ -12,8 +12,9 @@
 
 // Получаем шаблон
 const cardTemplate = document.querySelector("#card-template").content;
+const placesList = document.querySelector(".places__list");
 
-function createCard(cardData, DeleteCard) {
+function createCard(cardData, deleteCard) {
   //  клонируем
   const cardElement = cardTemplate
     .querySelector(".places__item")
@@ -30,22 +31,20 @@ function createCard(cardData, DeleteCard) {
   cardTitle.textContent = cardData.name;
 
   // Обработчик удаления карточки
-  deleteButton.addEventListener("click", () => DeleteCard(cardElement));
+  deleteButton.addEventListener("click", () => deleteCard(cardElement));
 
   return cardElement;
 }
 
 // Функция удаления карточки
-function DeleteCard(cardElement) {
+function deleteCard(cardElement) {
   cardElement.remove();
 }
 
 // Добавляем карточки на страницу
 document.addEventListener("DOMContentLoaded", () => {
-  const placesList = document.querySelector(".places__list");
-
   initialCards.forEach((cardData) => {
-    const cardElement = createCard(cardData, DeleteCard);
+    const cardElement = createCard(cardData, deleteCard);
     placesList.append(cardElement);
   });
 });
