@@ -1,9 +1,11 @@
-
-const popupEdit = document.querySelector(".popup_type_edit");
-
 //открытие
-function openPopup() {
-  popupEdit.classList.add("popup_is-opened");
+
+function openPopup(popupElement) {
+  const openedPopup = document.querySelector(".popup_is-opened");
+  if (openedPopup) {
+    closeModal(openedPopup);
+  }
+  popupElement.classList.add("popup_is-opened");
   document.addEventListener("keydown", handleEscape);
 }
 
@@ -34,5 +36,12 @@ function handleEscape(evt) {
     }
   }
 }
-
-export { openPopup, closeModal, handleEscape };
+function handleOverlayClick(event) {
+  if (
+    event.target.classList.contains("popup__close") ||
+    event.target === event.currentTarget
+  ) {
+    closeModal(event.currentTarget);
+  }
+}
+export { openPopup, closeModal, handleEscape, handleOverlayClick };

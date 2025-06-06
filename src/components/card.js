@@ -1,4 +1,4 @@
-import { handleEscape } from "./modal.js";
+import { handleEscape, openPopup } from "./modal.js";
 
 // Функция создания карточки
 
@@ -6,7 +6,7 @@ import { handleEscape } from "./modal.js";
 const cardTemplate = document.querySelector("#card-template").content;
 const placesList = document.querySelector(".places__list");
 
-function createCard(cardData, deleteCard, likeCard) {
+function createCard(cardData, deleteCard, likeCard, openImageCallback) {
   // клонируем
   const cardElement = cardTemplate
     .querySelector(".places__item")
@@ -27,10 +27,9 @@ function createCard(cardData, deleteCard, likeCard) {
   deleteButton.addEventListener("click", () => deleteCard(cardElement));
 
   //лайк
-  likeButton.addEventListener("click", function () {
-    this.classList.toggle("card__like-button_is-active");
+  likeButton.addEventListener("click", function (evt) {
     if (typeof likeCard === "function") {
-      likeCard(cardData);
+      likeCard(evt);
     }
   });
 
@@ -45,10 +44,10 @@ function createCard(cardData, deleteCard, likeCard) {
     popupImage.alt = this.alt;
     popupCaption.textContent = cardData.name;
     // Открываем картинку
-    imagePopup.classList.add("popup_is-opened");
-    document.addEventListener("keydown", handleEscape);
-  });
 
+    openPopup(imagePopup);
+  });
+  cardImage.addEventListener("click", () => openImageCallback(cardData));
   return cardElement;
 }
 
