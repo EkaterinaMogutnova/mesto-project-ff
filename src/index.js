@@ -1,6 +1,6 @@
 import "../src/pages/index.css";
 import { initialCards } from "./components/cards.js";
-import { createCard, deleteCard } from "./components/card.js";
+import { createCard, deleteCard, handleImageClick, handleLike } from "./components/card.js";
 import {
   openPopup,
   closeModal,
@@ -72,6 +72,9 @@ function openNewCardPopup() {
 openCardButton.addEventListener("click", openNewCardPopup);
 
 editButton.addEventListener("click", () => {
+  // Заполняем из профиля
+  nameInput.value = profileName.textContent;
+  jobInput.value = profileJob.textContent;
   openPopup(popupEdit);
 });
 
@@ -90,7 +93,7 @@ function handleFormSubmitN(evt) {
   };
 
   // Создаем DOM-элемент карточки
-  const cardElement = createCard(newCardData, deleteCard, handleLike);
+  const cardElement = createCard(newCardData, deleteCard, handleLike,  handleImageClick);
 
   // Добавляем карточку в начало списка
   placesList.prepend(cardElement);
@@ -105,18 +108,6 @@ function handleFormSubmitN(evt) {
 // Вешаем обработчик
 formElementCard.addEventListener("submit", handleFormSubmitN);
 
-const handleLike = (evt) => {
-  evt.target.classList.toggle("card__like-button_is-active");
-};
-function handleImageClick(cardData) {
-  const imagePopup = document.querySelector(".popup_type_image");
-  const popupImage = imagePopup.querySelector(".popup__image");
-  const popupCaption = imagePopup.querySelector(".popup__caption");
 
-  popupImage.src = cardData.link;
-  popupImage.alt = `Фотография места: ${cardData.name}`;
-  popupCaption.textContent = cardData.name;
 
-  openPopup(imagePopup);
-}
-export { openNewCardPopup };
+

@@ -1,11 +1,11 @@
-import { handleEscape, openPopup } from "./modal.js";
-
 // Функция создания карточки
-
+import { openPopup } from "./modal.js";
 // Получаем шаблон
 const cardTemplate = document.querySelector("#card-template").content;
 const placesList = document.querySelector(".places__list");
-
+const handleLike = (evt) => {
+  evt.target.classList.toggle("card__like-button_is-active");
+};
 function createCard(cardData, deleteCard, likeCard, openImageCallback) {
   // клонируем
   const cardElement = cardTemplate
@@ -34,20 +34,8 @@ function createCard(cardData, deleteCard, likeCard, openImageCallback) {
   });
 
   //Открываем картинку
-  cardImage.addEventListener("click", function () {
-    const imagePopup = document.querySelector(".popup_type_image");
-    const popupImage = imagePopup.querySelector(".popup__image");
-    const popupCaption = imagePopup.querySelector(".popup__caption");
 
-    // Заполняем попап данными
-    popupImage.src = this.src;
-    popupImage.alt = this.alt;
-    popupCaption.textContent = cardData.name;
-    // Открываем картинку
-
-    openPopup(imagePopup);
-  });
-  cardImage.addEventListener("click", () => openImageCallback(cardData));
+  cardImage.addEventListener("click", () => handleImageClick(cardData));
   return cardElement;
 }
 
@@ -55,5 +43,16 @@ function createCard(cardData, deleteCard, likeCard, openImageCallback) {
 function deleteCard(cardElement) {
   cardElement.remove();
 }
+function handleImageClick(cardData) {
+  const imagePopup = document.querySelector(".popup_type_image");
+  const popupImage = imagePopup.querySelector(".popup__image");
+  const popupCaption = imagePopup.querySelector(".popup__caption");
 
-export { createCard, deleteCard };
+  popupImage.src = cardData.link;
+  popupImage.alt = `Фотография места: ${cardData.name}`;
+  popupCaption.textContent = cardData.name;
+
+  openPopup(imagePopup);
+}
+
+export { createCard, deleteCard, handleLike, handleImageClick };
