@@ -59,7 +59,7 @@ Promise.all([getInitialCards(), getUserInfo()])
     ).style.backgroundImage = `url(${userData.avatar})`;
 
     // Добавляем карточки (новые сверху)
-    cardsData.reverse().forEach((card) => {
+    cardsData.forEach((card) => {
       const cardElement = createCard(
         card,
         deleteCard,
@@ -81,15 +81,32 @@ btnOpenAvatarPopup.addEventListener("click", () => {
   openPopup(popupEditAvatar);
 });
 
+//Создаём утилитарную функцию
+const handleButtonState = (
+  button,
+  isLoading,
+  loadingText = "Сохранение..."
+) => {
+  // Блокировка/разблокировка кнопки
+  button.disabled = isLoading;
+
+  // Установка текста: при загрузке или исходного
+  button.textContent = isLoading
+    ? loadingText
+    : button.dataset.originalText || "Сохранить";
+
+  // Сохраняем оригинальный текст при первом вызове
+  if (!button.dataset.originalText) {
+    button.dataset.originalText = button.textContent;
+  }
+};
+
 // Добавим обработчик отправки формы
 formEditAvatar.addEventListener("submit", function (evt) {
   evt.preventDefault();
 
   const submitButton = evt.submitter;
-  const originalText = submitButton.textContent;
-
-  submitButton.textContent = "Сохранение...";
-  submitButton.disabled = true;
+  handleButtonState(submitButton, true);
 
   updateAvatar(avatarInput.value)
     .then((userData) => {
@@ -99,10 +116,7 @@ formEditAvatar.addEventListener("submit", function (evt) {
       closeModal(popupEditAvatar);
     })
     .catch((err) => console.error("Ошибка:", err))
-    .finally(() => {
-      submitButton.textContent = originalText;
-      submitButton.disabled = false;
-    });
+    .finally(() => handleButtonState(submitButton, false));
 });
 
 const validationConfig = {
@@ -139,11 +153,9 @@ function handleProfileFormSubmit(evt) {
     .then((data) => {
       profileName.textContent = newName;
       profileJob.textContent = newJob;
-    })
-    .catch((err) => console.error("Ошибка:", err))
-    .finally(() => {
       closeModal(popupEdit);
-    });
+    })
+    .catch((err) => console.error("Ошибка:", err));
 }
 
 // Прикрепляем обработчик к форме
@@ -195,15 +207,13 @@ function handleFormSubmitN(evt) {
 
       // Добавляем карточку в начало списка
       placesList.prepend(cardElement);
-    })
-    .catch((err) => console.error("Ошибка:", err))
-    .finally(() => {
       // Очищаем форму
       formElementCard.reset();
 
       // Закрываем попап
       closeModal(newCardPopup);
-    });
+    })
+    .catch((err) => console.error("Ошибка:", err));
 }
 
 // Вешаем обработчик
@@ -220,8 +230,3 @@ function handleImageClick(cardData) {
 
   openPopup(imagePopup);
 }
-
-btnOpenAvatarPopup.addEventListener("click", () => {
-  openPopup(popupEditAvatar);
-});
-export { handleImageClick };

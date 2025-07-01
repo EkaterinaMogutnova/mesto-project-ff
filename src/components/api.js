@@ -31,24 +31,14 @@ function checkResponse(res) {
 function getUserInfo() {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers,
-  })
-    .then(checkResponse)
-    .catch((err) => {
-      console.error("Ошибка при загрузке данных пользователя:", err);
-      throw err;
-    });
+  }).then(checkResponse);
 }
 
 //Получаем карточки с сервера
 function getInitialCards() {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers,
-  })
-    .then(checkResponse)
-    .catch((err) => {
-      console.error("Ошибка при загрузке карточек:", err);
-      throw err;
-    });
+  }).then(checkResponse);
 }
 
 //Профиль
@@ -60,12 +50,7 @@ function updateProfile(name, about) {
       name: name,
       about: about,
     }),
-  })
-    .then(checkResponse)
-    .catch((err) => {
-      console.error("Ошибка при обновлении профиля:", err);
-      throw err;
-    });
+  }).then(checkResponse);
 }
 
 //Добавляем новую карточку
@@ -77,12 +62,7 @@ function addNewCard(name, link) {
       name: name,
       link: link,
     }),
-  })
-    .then(checkResponse)
-    .catch((err) => {
-      console.error("Ошибка при создании карточки:", err);
-      throw err;
-    });
+  }).then(checkResponse);
 }
 
 //Удаление карточки
@@ -90,12 +70,7 @@ function deleteCard(cardId) {
   return fetch(`${config.baseUrl}/cards/${cardId}`, {
     method: "DELETE",
     headers: config.headers,
-  })
-    .then(checkResponse)
-    .catch((err) => {
-      console.error("Ошибка при удалении карточки:", err);
-      throw err;
-    });
+  }).then(checkResponse);
 }
 
 //Лайк +
@@ -103,12 +78,7 @@ function likeCard(cardId) {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: "PUT",
     headers: config.headers,
-  })
-    .then(checkResponse)
-    .catch((err) => {
-      console.error("Ошибка при добавлении лайка:", err);
-      throw err;
-    });
+  }).then(checkResponse);
 }
 
 //Лайк -
@@ -116,12 +86,7 @@ function unlikeCard(cardId) {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: "DELETE",
     headers: config.headers,
-  })
-    .then(checkResponse)
-    .catch((err) => {
-      console.error("Ошибка при удалении лайка:", err);
-      throw err;
-    });
+  }).then(checkResponse);
 }
 
 //Аватар
@@ -132,10 +97,5 @@ function updateAvatar(avatarUrl) {
     body: JSON.stringify({
       avatar: avatarUrl,
     }),
-  })
-    .then(checkResponse)
-    .catch((err) => {
-      console.error("Ошибка:", err);
-      throw err;
-    });
+  }).then(checkResponse);
 }

@@ -1,5 +1,5 @@
 // Функция создания карточки
-import { handleImageClick } from "../index.js";
+
 import { deleteCard as deleteCardApi, likeCard, unlikeCard } from "./api.js";
 
 // Получаем шаблон
@@ -24,10 +24,9 @@ const handleLike = (evt, cardId, likeCounter) => {
       })
       .catch((err) => console.error("Ошибка:", err));
   }
-  evt.target.classList.toggle("card__like-button_is-active");
 };
 
-function createCard(cardData, deleteCard, likeCard, openImageCallback, userId) {
+function createCard(cardData, deleteCard, likeCard, openImageCallback, userId, handleImageClick) {
   if (!cardData) {
     console.error("Данные карточки не переданы");
     return null;
@@ -77,6 +76,7 @@ function createCard(cardData, deleteCard, likeCard, openImageCallback, userId) {
 
   //Открываем картинку
   cardImage.addEventListener("click", () => handleImageClick(cardData));
+  
   return cardElement;
 }
 

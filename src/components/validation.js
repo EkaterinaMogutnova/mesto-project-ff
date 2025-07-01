@@ -94,10 +94,6 @@ export const enableValidation = (settings) => {
   // Находим все формы
   const formList = Array.from(document.querySelectorAll(settings.formSelector));
   formList.forEach((formElement) => {
-    // Отменяем стандартное поведение отправки
-    formElement.addEventListener("submit", (evt) => {
-      evt.preventDefault();
-    });
     // Устанавливаем обработчики для формы
     setEventListeners(formElement, settings);
   });
