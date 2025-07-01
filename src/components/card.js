@@ -1,13 +1,42 @@
 // Функция создания карточки
-import { openPopup } from "./modal.js";
+import { handleImageClick } from "../index.js";
+import { deleteCard as deleteCardApi, likeCard, unlikeCard } from "./api.js";
+
 // Получаем шаблон
 const cardTemplate = document.querySelector("#card-template").content;
 const placesList = document.querySelector(".places__list");
-const handleLike = (evt) => {
+
+// Добавляем лайки
+const handleLike = (evt, cardId, likeCounter) => {
+  const likeButton = evt.target;
+  if (likeButton.classList.contains("card__like-button_is-active")) {
+    unlikeCard(cardId)
+      .then((data) => {
+        likeCounter.textContent = data.likes.length;
+        likeButton.classList.remove("card__like-button_is-active");
+      })
+      .catch((err) => console.error("Ошибка:", err));
+  } else {
+    likeCard(cardId)
+      .then((data) => {
+        likeCounter.textContent = data.likes.length;
+        likeButton.classList.add("card__like-button_is-active");
+      })
+      .catch((err) => console.error("Ошибка:", err));
+  }
   evt.target.classList.toggle("card__like-button_is-active");
 };
-function createCard(cardData, deleteCard, likeCard, openImageCallback) {
-  // клонируем
+
+function createCard(cardData, deleteCard, likeCard, openImageCallback, userId) {
+  if (!cardData) {
+    console.error("Данные карточки не переданы");
+    return null;
+  }
+  if (!cardData.likes) {
+    cardData.likes = [];
+  }
+
+  // Клонируем
   const cardElement = cardTemplate
     .querySelector(".places__item")
     .cloneNode(true);
@@ -17,6 +46,13 @@ function createCard(cardData, deleteCard, likeCard, openImageCallback) {
   const cardTitle = cardElement.querySelector(".card__title");
   const deleteButton = cardElement.querySelector(".card__delete-button");
   const likeButton = cardElement.querySelector(".card__like-button");
+  const likeCounter = cardElement.querySelector(".place__like-counter");
+
+  // Устанавливаем начальное количество лайков
+  likeCounter.textContent = cardData.likes.length;
+  if (cardData.likes.some((like) => like._id === userId)) {
+    likeButton.classList.add("card__like-button_is-active");
+  }
 
   // Заполняем
   cardImage.src = cardData.link;
@@ -24,35 +60,33 @@ function createCard(cardData, deleteCard, likeCard, openImageCallback) {
   cardTitle.textContent = cardData.name;
 
   // Обработчик удаления карточки
-  deleteButton.addEventListener("click", () => deleteCard(cardElement));
+  if (cardData.owner._id === userId) {
+    deleteButton.addEventListener("click", () =>
+      deleteCard(cardElement, cardData._id)
+    );
+  } else {
+    deleteButton.remove();
+  }
 
-  //лайк
+  //Лайк
   likeButton.addEventListener("click", function (evt) {
     if (typeof likeCard === "function") {
-      likeCard(evt);
+      likeCard(evt, cardData._id, likeCounter);
     }
   });
 
   //Открываем картинку
-
   cardImage.addEventListener("click", () => handleImageClick(cardData));
   return cardElement;
 }
 
 // Функция удаления карточки
-function deleteCard(cardElement) {
-  cardElement.remove();
-}
-function handleImageClick(cardData) {
-  const imagePopup = document.querySelector(".popup_type_image");
-  const popupImage = imagePopup.querySelector(".popup__image");
-  const popupCaption = imagePopup.querySelector(".popup__caption");
-
-  popupImage.src = cardData.link;
-  popupImage.alt = `Фотография места: ${cardData.name}`;
-  popupCaption.textContent = cardData.name;
-
-  openPopup(imagePopup);
+function deleteCard(cardElement, cardId) {
+  deleteCardApi(cardId)
+    .then(() => {
+      cardElement.remove();
+    })
+    .catch((err) => console.error("Ошибка:", err));
 }
 
-export { createCard, deleteCard, handleLike, handleImageClick };
+export { createCard, deleteCard, handleLike };

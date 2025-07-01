@@ -2,7 +2,7 @@
 @import url(./__item/places__item.css);
 
 .places {
-  font-family: 'Inter', Arial, sans-serif;
+  font-family: "Inter", Arial, sans-serif;
   padding: 15px 0 36px;
 }
 
@@ -10,4 +10,14 @@
   .places {
     padding: 15px 0 18px;
   }
+}
+.place__like-counter {
+  position: absolute;
+  bottom: 18px;
+  right: 25px;
+  width: 10px;
+  height: 13px;
+  color: #000;
+  font-size: 13px;
+  line-height: 16px;
 }

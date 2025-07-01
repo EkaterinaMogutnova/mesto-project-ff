@@ -1,11 +1,11 @@
-//открытие
+//Открытие
 
 function openPopup(popupElement) {
   popupElement.classList.add("popup_is-opened");
   document.addEventListener("keydown", handleEscape);
 }
 
-//закрытие
+//Закрытие
 function closeModal(modal) {
   modal.classList.remove("popup_is-opened");
   document.removeEventListener("keydown", handleEscape);
