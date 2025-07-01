@@ -15,18 +15,18 @@ const handleLike = (evt, cardId, likeCounter) => {
         likeCounter.textContent = data.likes.length;
         likeButton.classList.remove("card__like-button_is-active");
       })
-      .catch((err) => console.error("Ошибка:", err));
+      .catch((err) => console.error("Ошибка при удалении лайка:", err));
   } else {
     likeCard(cardId)
       .then((data) => {
         likeCounter.textContent = data.likes.length;
         likeButton.classList.add("card__like-button_is-active");
       })
-      .catch((err) => console.error("Ошибка:", err));
+      .catch((err) => console.error("Ошибка при добавлении лайка:", err));
   }
 };
 
-function createCard(cardData, deleteCard, likeCard, openImageCallback, userId, handleImageClick) {
+function createCard(cardData, deleteCard, likeCard, openImage, userId) {
   if (!cardData) {
     console.error("Данные карточки не переданы");
     return null;
@@ -75,8 +75,8 @@ function createCard(cardData, deleteCard, likeCard, openImageCallback, userId, h
   });
 
   //Открываем картинку
-  cardImage.addEventListener("click", () => handleImageClick(cardData));
-  
+  cardImage.addEventListener("click", () => openImage(cardData));
+
   return cardElement;
 }
 
@@ -86,7 +86,7 @@ function deleteCard(cardElement, cardId) {
     .then(() => {
       cardElement.remove();
     })
-    .catch((err) => console.error("Ошибка:", err));
+    .catch((err) => console.error("Ошибка при удалении карточки:", err));
 }
 
 export { createCard, deleteCard, handleLike };
